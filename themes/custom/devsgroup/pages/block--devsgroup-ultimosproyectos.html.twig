@@ -1,0 +1,384 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - in_preview: Whether the plugin is being rendered in preview mode.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to
+ *   be displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+
+<!-- Latest Projects-->
+<section class="section section-sm section-fluid bg-default text-center">
+  <div class="container-fluid isotope-wrap">
+    {% if label %}
+      <h2 class="wow fadeInLeft">{{ label }}</h2>
+    {% endif %}
+    <p class="quote-jean wow fadeInRight es" data-wow-delay=".1s">En nuestro portafolio podrá explorar los últimos productos desarrollados para nuestros clientes para diferentes fines corporativos. Nuestro equipo calificado de diseñadores de interfaces y desarrolladores de software siempre está listo para crear algo único para usted.</p>
+    <p class="quote-jean wow fadeInRight en" style="display:none" data-wow-delay=".1s">In our portfolio, you can browse the latest products developed for our clients for different corporate purposes. Our qualified team of interface designers and software developers is always ready to create something unique for you.</p>
+    
+    <!---desktop-->
+    <ul  class=" filter-desktop isotope-filters-list" id="isotope-3">
+        
+    </ul>
+    <!---movil-->
+    <div style="display:none" class="filter-movil dropdown isotope-filters isotope-filters-horizontal">
+        <button class="isotope-filters-toggle button button-md button-icon button-icon-right button-default-outline button-wapasha dropdown-toggle show" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+           <span class="icon fa fa-caret-down"></span>  Filter
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton" style="position: absolute; inset: 0px auto auto 0px; margin: 0px; transform: translate3d(95px, 52.6667px, 0px);" data-popper-placement="bottom-start" id="itemss-filter">
+            
+        </ul>
+    </div>
+
+    
+    <div class="gallery-wrap">
+      <div id="gallery">
+           
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js'></script>
+<script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
+
+<script>
+ listar_gallery();
+function listar_gallery() {
+  let url2 = "/project-gallery";
+  let gallerySliderAcum = "";
+  let isotopeAcum = '';
+  let arregloAux = [];
+  let acumFinal = '';
+  let myelement = "";
+  let cont = 0;
+
+  fetch(url2)
+    .then(res => res.json())
+    .then(dato => {
+      for (let index = 0; index < dato.length; index++) {
+        const element = dato[index];
+          myelement= element.category.replace(/\./g, "")
+        // Crear las entradas de la galería
+        gallerySliderAcum += `<a class="gallery-item col-lg-4 col-md-6 col-sm-12 ${myelement}" href="#" data-cat="${myelement}">
+          <div class="inside">
+            <div class="details">
+              <div class="text">
+                <h2>${element.title}</h2>
+                <p>${element.category}</p>
+              </div>
+            </div>
+            <div class="overlay"></div>
+            <img src="${element.image}" alt="${element.title}" />
+          </div>
+        </a>`;
+
+        // Procesar las categorías
+        if (element.category !== '') {
+          myelement = element.category;
+          let categoryArray = element.category.split(". "); // Dividir categorías por ". "
+
+          // Verificar si las categorías están en arregloAux
+          categoryArray.forEach((item) => {
+            if (!arregloAux.includes(item)) {
+              // Si no está, agregar al acumulador y al arregloAux
+              if (cont !== 0) {
+                acumFinal += `<li><a class="dropdown-item filter" data-filter=".${item}">${item}</a></li>`;
+              } else {
+                acumFinal += `<li><a class="dropdown-item filter active mixitup-control-active" data-filter=".${item}">${item}</a></li>`;
+                cont++;
+              }
+              isotopeAcum += `<li><a data-filter="${element.category}">${item}</a></li>`;
+              arregloAux.push(item); // Agregar el ítem al arreglo auxiliar
+            }
+          });
+        }
+
+        // Crear la estructura para isotope
+        
+      }
+
+      // Actualizar el contenido en el DOM
+      document.getElementById("itemss-filter").innerHTML += acumFinal;
+      document.getElementById("isotope-3").innerHTML += isotopeAcum;
+      document.getElementById("gallery").innerHTML += gallerySliderAcum;
+    })
+    .catch(error => {
+      console.error('Error fetching slider data:', error);
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    var mixer = mixitup('#gallery', {
+        selectors: {
+            target: '.gallery-item'
+        },
+        animation: {
+            duration: 600,
+            effects: 'fade',
+            easing: 'ease-in-out'
+        },
+        load: {
+            filter: '.print, .strategy'
+        },
+        callbacks: {
+            onMixStart: function() {
+                // Deshabilitar los botones durante la mezcla
+                document.querySelectorAll('.isotope-filters-list a').forEach(button => {
+                    button.classList.add('disabled');
+                    button.setAttribute('disabled', true);
+                });
+            },
+            onMixEnd: function() {
+                // Volver a habilitar los botones después de la mezcla
+                document.querySelectorAll('.isotope-filters-list a').forEach(button => {
+                    button.classList.remove('disabled');
+                    button.removeAttribute('disabled');
+                });
+
+                // Aplicar un efecto de desaparición y aparición
+                const items = document.querySelectorAll('.gallery-item');
+                items.forEach(item => {
+                    item.style.opacity = 0;
+                    setTimeout(() => {
+                        item.style.transition = 'opacity 600ms ease-in-out';
+                        item.style.opacity = 1;
+                    }, Math.random() * 100);
+                });
+            }
+        }
+    });
+    // Control de filtros
+    const filterLinks = document.querySelectorAll('.isotope-filters-list a.filter');
+    filterLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            // Quitar clase active de todos los filtros
+            filterLinks.forEach(l => l.classList.remove('active'));
+            // Agregar clase active al filtro seleccionado
+            this.classList.add('active');
+        });
+    });
+});
+
+/////////////////////////////////////
+// Selecciona todos los elementos de la lista
+    const menuItems = document.querySelectorAll('.dropdown-menu .filter');
+
+    // Agrega el evento de clic a cada elemento
+    menuItems.forEach(item => {
+        item.addEventListener('click', function() {
+            // Remueve las clases 'active' y 'mixitup-control-active' de todos los elementos
+            menuItems.forEach(el => el.classList.remove('active', 'mixitup-control-active'));
+
+            // Agrega las clases al elemento clicado
+            this.classList.add('active', 'mixitup-control-active');
+        });
+    });
+    // Función para manejar la adición o eliminación de la clase 'row'
+        function updateGalleryClass() {
+            const gallery = document.getElementById("gallery");
+        
+            if (window.innerWidth <= 768) { // Consideramos 'móvil' como <= 768px
+                gallery.classList.add("row"); // Agrega la clase 'row'
+            } else {
+                gallery.classList.remove("row"); // Elimina la clase 'row'
+            }
+        }
+        
+        // Escucha el evento de redimensionamiento
+        window.addEventListener("resize", updateGalleryClass);
+        
+        // Verifica el tamaño de pantalla inicial
+        updateGalleryClass();
+
+</script>
+
+<style>
+a.filter {
+    cursor: pointer;
+}
+#filters {
+  margin: 1%;
+  padding: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+#filters li {
+  float: left;
+}
+
+#filters li span {
+  display: block;
+  padding: 5px 20px;
+  text-decoration: none;
+  color: #666;
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: all ease-in-out 0.25s;
+}
+
+#filters li:hover span {
+  color: #000;
+}
+
+#filters li span.active {
+  background: #1fbae7;
+  color: #fff;
+}
+
+.gallery-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center; /* Centra los elementos */
+}
+
+.gallery-item {
+  width: 33.333%; /* Ajusta el ancho según el diseño */
+  padding: 10px;
+  position: relative;
+  z-index: 10;
+  opacity: 1; /* Asegura que la opacidad inicial sea 1 */
+}
+
+.inside {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+
+.details,
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: 0;
+}
+
+.details {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transition: all 0.3s ease-in-out;
+}
+.details h2 {
+  color: #fff;
+  font-size: 1.5em;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-align: center;
+  margin: 0;
+}
+.details p {
+  color: #fff;
+  font-size: 1em;
+  letter-spacing: 2px;
+  text-align: center;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.inside img {
+  float: left;
+  width: 100%;
+}
+
+.overlay {
+  background: rgba(31, 186, 231, 0.8);
+  z-index: 1;
+  transition: all 0.7s ease-in-out;
+}
+
+.gallery-item:hover .details,
+.gallery-item:hover .overlay {
+  opacity: 1;
+}
+a.gallery-item.col-lg-4.col-md-6.col-sm-12 {
+    float: left;
+    width: 30% !important;
+}
+#gallery{
+  display: flex;
+    justify-content: center;
+}
+@media (max-width: 30em) {
+  .gallery-item {
+    width: 100%;
+  }
+}
+ 
+  ul.dropdown-menu.show {
+      transform: translateX(-53%) !important;
+      max-width: 280px !important;
+      width: 100% !important;
+      left: 50% !important;
+      top: 109% !important;
+
+      padding: 20px !important;
+      font-size: 18px;
+      line-height: 1.5;
+      font-weight: 500;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+      font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+      color: #9b9b9b;
+      background: #ffffff;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.17);
+
+     
+}
+ a.dropdown-item.filter.active.mixitup-control-active {
+      background: #756aee !important;
+      color: #fff !important;
+      padding: 0.8em;
+  }
+  ul#isotope-3>li>a {
+    cursor: pointer;
+}
+  @media only screen and (max-width : 900px) {
+    .filter-movil{
+      display: block !important;
+    }
+    .filter-desktop{
+      display: none !important
+    }
+    a.gallery-item.col-lg-4.col-md-6.col-sm-12 {
+        width: 100% !important;
+    }
+  }
+  .filter-desktop > li {
+          margin-top: 2em !important;
+    margin-bottom: 1em !important;
+   }
+</style>

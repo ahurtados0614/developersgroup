@@ -1,0 +1,101 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - in_preview: Whether the plugin is being rendered in preview mode.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+ <!-- Swiper-->
+      <section class="section swiper-container swiper-slider swiper-slider-classic main_slider_display" data-loop="true" data-swiper='{"loop":true,"autoplay":{"delay":5000},"effect":"slide","simulateTouch":true,"direction":"vertical","nav":false}'>
+        <div class="swiper-wrapper text-center carousel slide" id="carouselExampleCaptions" data-bs-ride="carousel">
+           <!-- Indicadores de navegación -->
+          <div class="carousel-indicators" id="carousel_indicators">
+            
+          </div>
+          <!--item-->
+          <div class="carousel-inner" id="main_slider_content">
+          </div>
+          <!--item out-->
+        </div>        
+      </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+listar_main_slider();
+
+function listar_main_slider() {
+  let url2 = "/api-main-slider";
+  let mainSliderAcum = "";
+  let indicators="";
+  
+  fetch(url2)
+    .then(res => res.json())
+    .then(dato => {
+    let lang = window.location.pathname.substring(1, 3); // Obtiene los primeros 2 caracteres del idioma en la URL
+    lang = lang === 'en' ? 'English' : 'Spanish';  // Define la variable lang (según la lógica que manejes)
+      for (let index = 0; index < dato.length; index++) {
+        const element = dato[index];
+        if (element.langcode === lang) {
+            indicators += `<button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="${index}" class="${index==0?'active':''}" aria-current="true" aria-label="Slide ${index}"></button>`;
+            mainSliderAcum += `
+             <div class="carousel-item ${index==0?'active':''}" style="height: 450px; background-image: url('${window.innerWidth <= 800 ? element.image_mobile:element.image}'); background-size: cover;">
+            <div class="carousel-caption d-md-block">
+              <h1 class="fadeInLeft animated">${element.title}</h1>
+              <p class="text-width-large fadeInRight animated" style="display:block !important; color:#000 !important;">${element.body}</p>
+              <a class="button button-primary button-ujarak fadeInUp animated" href="${element.link}">${element.caption}</a>
+            </div>
+          </div>`;
+        }
+      }
+      if(indicators==""){
+          var styleSheet = document.createElement("style");
+            styleSheet.type = "text/css";
+            styleSheet.innerText = ".main_slider_display { display: none !important; }";
+            document.head.appendChild(styleSheet);
+
+      }
+      document.getElementById("carousel_indicators").innerHTML += indicators;
+      document.getElementById("main_slider_content").innerHTML += mainSliderAcum;
+    })
+    .catch(error => {
+      console.error('Error fetching slider data:', error);
+    });
+}
+
+</script>
+<style>
+#block-devsgroup-main-navigation > .nav-level-0 > .nav-item > a{
+  color: #000000 !important;
+}
+.carousel-indicators [data-bs-target] {
+
+    background-color: #756aee;
+}  
+</style>

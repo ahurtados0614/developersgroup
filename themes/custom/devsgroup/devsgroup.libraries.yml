@@ -1,0 +1,12 @@
+global-styling:
+  css:
+    theme:
+      css/style.css: {}
+      css/devsgroup_style.css: {}
+      css/style_devsgroup.css: {}
+      css/css.css: {}
+      css/font_googleapis.css: {}
+      css/fonts.css: {}
+  js:
+    js/script.min.js: {}
+

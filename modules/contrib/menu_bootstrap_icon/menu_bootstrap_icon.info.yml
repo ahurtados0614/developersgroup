@@ -1,0 +1,13 @@
+name: 'Menu bootstrap icon'
+type: module
+description: 'Add icon bootstrap to menu, link field type'
+core_version_requirement: ^9.3 || ^10 || ^11
+configure: menu_bootstrap_icon.settings
+dependencies:
+  - drupal:menu_ui
+package: Menu
+
+# Information added by Drupal.org packaging script on 2024-09-19
+version: '1.0.11'
+project: 'menu_bootstrap_icon'
+datestamp: 1726761685

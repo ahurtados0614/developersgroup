@@ -1,0 +1,109 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - in_preview: Whether the plugin is being rendered in preview mode.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+ <!-- See all services-->
+      <section class="section section-sm section-first bg-default text-center my-services-front">
+        <div class="container">
+          <div class="row row-30 justify-content-center">
+            <div class="col-md-7 col-lg-5 col-xl-6 text-lg-start wow fadeInUp"><img src="sites/default/files/custom_image/index-1-415x592.png" alt="" width="415" height="592"/>
+            </div>
+            <div class="col-lg-7 col-xl-6">
+              <div class="row row-30" id="content_services_items">
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+listar_content_services();
+
+function listar_content_services() {
+  let url2 = "/services-front";
+  let ServicesAcum = "";
+  let cont = 0;
+  const currentUrl = window.location.href;
+    
+    // Identificar la base URL sin parámetros ni hash.
+    const url = new URL(currentUrl);
+    let pathname = url.pathname;
+    
+  fetch(url2)
+    .then(res => res.json())
+    .then(dato => {
+    let lang = window.location.pathname.substring(1, 3); // Obtiene los primeros 2 caracteres del idioma en la URL
+            lang = lang === 'en' ? 'English' : 'Spanish';  // Define la variable lang (según la lógica que manejes)
+
+    ServicesAcum += `<div class="col-sm-6 wow fadeInRight">
+                  <article class="box-icon-modern box-icon-modern-custom">
+                    <div>
+                      <h3 class="box-icon-modern-big-title">${pathname =="/en" ? 'See all services':'Ver todos los servicios'}</h3>
+                      <div class="box-icon-modern-decor"></div><a class="button button-primary button-ujarak" href="${pathname =="/en" ? '/services':'/servicios'}">${pathname =="/en" ? 'All services':'Todos los servicios'}</a>
+                    </div>
+                  </article>
+                </div>`;
+      for (let index = 0; index < dato.length; index++) {
+        const element = dato[index];
+        let icon = element.class_icon;
+        if (element.langcode === lang) { 
+            cont++;
+            if(icon != ""){
+              icon = `<a href="${element.internal_link !="" ? element.internal_link:''}"><div class="box-icon-modern-icon ${icon}"></div></a>`;
+            }
+            ServicesAcum += `<div class="col-sm-6 wow fadeInRight" data-wow-delay=".1s">
+                      <article class="box-icon-modern box-icon-modern-2">
+                        ${icon}
+                        <h5 class="box-icon-modern-title"><a href="${element.internal_link !="" ? element.internal_link:''}">${element.title}</a></h5>
+                        <div class="box-icon-modern-decor"></div>
+                        <p class="box-icon-modern-text"><a href="${element.internal_link !="" ? element.internal_link:''}">${element.front_description}</a></p>
+                      </article>
+                    </div>`;
+        }
+      }
+      if(cont==0){
+          var styleSheet = document.createElement("style");
+            styleSheet.type = "text/css";
+            styleSheet.innerText = ".my-services-front { display: none !important; }";
+            document.head.appendChild(styleSheet);
+
+      }
+      document.getElementById("content_services_items").innerHTML += ServicesAcum;
+    })
+    .catch(error => {
+      console.error('Error fetching slider data:', error);
+    });
+}
+</script>

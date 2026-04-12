@@ -1,0 +1,16 @@
+# =========================
+# Configuración sensible
+# =========================
+web/sites/default/settings.php
+web/sites/default/settings.local.php
+sites/default/settings.php
+sites/default/settings.local.php
+
+# =========================
+# Archivos generados
+# =========================
+/sites/default/files/
+/web/sites/default/files/
+/sites/default/private/
+/tmp/
+/cache/

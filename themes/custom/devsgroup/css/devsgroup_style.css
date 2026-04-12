@@ -1,0 +1,90 @@
+body{
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; 
+}
+img#mi_logo {
+    width: 60%;
+    height: auto;
+}
+
+nav.navbar.navbar-expand-lg.navbar-light.text-dark {
+    padding-top: 1em;
+    padding-bottom: 1em;
+}
+
+.dropdown-menu[data-bs-popper] {
+    left: -15px;
+}
+
+ul.dropdown-menu.nav-level-1.show {
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    border: 0px;
+    border-radius: 0px;
+    margin-top: 1.1em;
+    padding: 22px 15px 34px 34px;
+}
+
+@media only screen and (max-width : 900px) {
+    .region.region-nav-branding {
+        width: 80% !important;
+    }
+
+    img#mi_logo {
+        width: 100%;
+        height: auto;
+    }
+}
+
+.region.region-nav-branding {
+    width: 40%;
+}
+
+#block-devsgroup-main-navigation > .nav-level-0 > .nav-item {
+    position: relative;
+}
+
+/* Estilo base del pseudo-elemento ::after */
+#block-devsgroup-main-navigation .nav-level-0 > .nav-item::after {
+    content: "";
+    position: absolute;
+    height: 0;
+    width: 50%; /* Ancho de la línea del 50% del nav-item */
+    bottom: 0;
+    left: 50%; /* Posiciona el punto de inicio de la línea en el centro del nav-item */
+    transform: translateX(-50%); /* Mueve la línea hacia la izquierda un 50% de su propio ancho para centrarla */
+    background-color: #756aee;
+    transition: height 0.2s ease-in-out;
+}
+
+/* Al hacer hover, la línea se mostrará con altura de 3px */
+#block-devsgroup-main-navigation .nav-level-0 > .nav-item:hover::after,
+#block-devsgroup-main-navigation .nav-level-0 > .nav-item > .nav-link:hover::after {
+    height: 3px;
+}
+
+#block-devsgroup-main-navigation > .navbar-nav > .nav-item > a {
+font-weight: 500;
+}
+#block-devsgroup-main-navigation > .nav-level-0 > .nav-item > a {
+    position: relative;
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.2;
+    letter-spacing: 0;
+    color: #151515;
+    transition: .25s;
+}
+#block-devsgroup-main-navigation > .nav-level-0 > .nav-item {
+    margin: 0.2em;
+    padding: 0.2em 1em;
+}
+.dropdown-toggle.fl-bigmug-line-share27:after {
+    display: none;
+}
+@media only screen and (max-width : 900px) {
+.dropdown-toggle.fl-bigmug-line-share27 {
+    margin-left: 1.4em;
+}
+ul#list_share {
+    margin-left: 1.6em;
+}
+}
