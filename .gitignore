@@ -3,6 +3,8 @@
 # =========================
 web/sites/default/settings.php
 web/sites/default/settings.local.php
+web/sites/default/services.yml
+
 sites/default/settings.php
 sites/default/settings.local.php
 
@@ -10,7 +12,8 @@ sites/default/settings.local.php
 # Archivos generados
 # =========================
 /sites/default/files/
-/web/sites/default/files/
+/web/sites/default/files/*
+web/sites/default/files/.htaccess
 /sites/default/private/
 /tmp/
 /cache/

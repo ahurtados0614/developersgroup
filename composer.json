@@ -26,7 +26,9 @@
         "drupal/menu_bootstrap_icon": "^1.0",
         "drupal/metatag": "^2.0",
         "drupal/pathauto": "^1.13",
-        "drupal/smtp": "^1.4"
+        "drupal/smtp": "^1.4",
+        "drupal/statistics": "^1.0",
+        "drush/drush": "^13.7"
     },
     "conflict": {
         "drupal/drupal": "*"
