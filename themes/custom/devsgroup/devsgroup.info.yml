@@ -21,5 +21,6 @@ regions:
   sidebar_second: 'Sidebar second'
   footer: Footer
   maxwidth: 'Max Width'
+  maxwidthfoot: 'Max Width Footer'
 libraries-override:
   bootstrap5/global-styling: false

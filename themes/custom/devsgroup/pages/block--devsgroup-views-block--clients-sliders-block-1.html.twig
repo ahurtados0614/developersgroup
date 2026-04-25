@@ -1,0 +1,241 @@
+{#
+/**
+ * @file
+ * Theme override to display a block.
+ *
+ * Available variables:
+ * - plugin_id: The ID of the block implementation.
+ * - label: The configured label of the block if visible.
+ * - configuration: A list of the block's configuration values.
+ *   - label: The configured label for the block.
+ *   - label_display: The display settings for the label.
+ *   - provider: The module or other provider that provided this block plugin.
+ *   - Block plugin specific settings will also be stored here.
+ * - in_preview: Whether the plugin is being rendered in preview mode.
+ * - content: The content of this block.
+ * - attributes: array of HTML attributes populated by modules, intended to
+ *   be added to the main container tag of this template.
+ *   - id: A valid HTML ID and guaranteed unique.
+ * - title_attributes: Same as attributes, except applied to the main title
+ *   tag that appears in the template.
+ * - title_prefix: Additional output populated by modules, intended to be
+ *   displayed in front of the main title tag that appears in the template.
+ * - title_suffix: Additional output populated by modules, intended to be
+ *   displayed after the main title tag that appears in the template.
+ *
+ * @see template_preprocess_block()
+ */
+#}
+{%
+  set classes = [
+    'block',
+    'block-' ~ configuration.provider|clean_class,
+    'block-' ~ plugin_id|clean_class,
+  ]
+%}
+<div{{ attributes.addClass(classes) }}>
+  {{ title_prefix }}
+  {% if label %}
+    <h2{{ title_attributes }}>{{ label }}</h2>
+  {% endif %}
+  {{ title_suffix }}
+  {% block content %}
+    <!-- Years of experience-->
+<section class="section section-sm bg-default">
+    <div class="container">
+        <div class="row row-30 row-xl-24 justify-content-center align-items-center align-items-lg-start text-start">
+            <div class="col-md-6 col-lg-5 col-xl-5 text-center">
+                <a class="text-img" href="about-us.html"><span class="counter" id="counter">10</span></a>
+            </div>
+            <div class="col-sm-8 col-md-6 col-lg-5 col-xl-3">
+                <div class="text-width-extra-small offset-top-lg-24 wow fadeInUp">
+                    <h3 class="title-decoration-lines-left">
+                        Years of Experience
+                    </h3>
+                    <p class="text-gray-500">
+                        Developers Group es un equipo de diseñadores y desarrolladores de aplicaciones con amplia experiencia que crean software único para usted.
+                    </p>
+                    <p>
+                        <a class="button button-secondary button-pipaluk" href="https://www.templatemonster.com/website-templates/Developers Group-software-development-company-multipage-website-template-71028.html" target="_blank">Get in touch</a>
+                    </p>
+                </div>
+            </div>
+            <div class="col-sm-10 col-md-8 col-lg-6 col-xl-4 wow fadeInRight" data-wow-delay=".1s">
+                <div class="row justify-content-center border-2-column offset-top-xl-26">
+                    <div class="col-9 col-sm-6">
+                        <div class="counter-amy">
+                            <div class="counter-amy-number">
+                                <span class="counter">2</span><span class="symbol">k</span>
+                            </div>
+                            <h6 class="counter-amy-title">
+                                apps developed
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="col-9 col-sm-6">
+                        <div class="counter-amy">
+                            <div class="counter-amy-number">
+                                <span class="counter">40</span>
+                            </div>
+                            <h6 class="counter-amy-title">
+                                Consultants
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="col-9 col-sm-6">
+                        <div class="counter-amy">
+                            <div class="counter-amy-number">
+                                <span class="counter">12</span>
+                            </div>
+                            <h6 class="counter-amy-title">
+                                Awards won
+                            </h6>
+                        </div>
+                    </div>
+                    <div class="col-9 col-sm-6">
+                        <div class="counter-amy">
+                            <div class="counter-amy-number">
+                                <span class="counter">160</span>
+                            </div>
+                            <h6 class="counter-amy-title">
+                                Employees
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-xl-12 align-self-center">
+                <div class="row row-30 justify-content-center" id="clients-experiences">
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Years of experience--><!-- JavaScript para el contador --><script>
+    // Función del contador animado
+    function animateCounter(elementId, start, end, duration) {
+        let startTime = null;
+        const element = document.getElementById(elementId);
+        function animation(currentTime) {
+            if (!startTime) startTime = currentTime;
+            const progress = currentTime - startTime;
+            const current = Math.min(start + Math.ceil((end - start) * (progress / duration)), end);
+            element.textContent = current;
+            if (current < end) {
+                requestAnimationFrame(animation);
+            }
+        }
+        requestAnimationFrame(animation);
+    }
+    // Observador para disparar la animación cuando el elemento es visible
+    document.addEventListener("DOMContentLoaded", function () {
+        const target = document.getElementById("counter");
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    // Cuando el elemento es visible, inicia la animación
+                    animateCounter("counter", 0, 10, 2000);
+                    observer.unobserve(target); // Detener la observación para que no se repita
+                }
+            });
+        }, { threshold: 0.5 }); // Disparar cuando el 50% del elemento es visible
+        observer.observe(target);
+    });
+</script>
+  {% endblock %}
+</div>
+<script>
+document.addEventListener("DOMContentLoaded", listar_content_services);
+function listar_content_services() {
+  let url2 = "/api/client-slider";
+  let itemClientAcum = "";
+  const currentUrl = window.location.href;
+    
+    // Identificar la base URL sin parámetros ni hash.
+    const url = new URL(currentUrl);
+    let pathname = url.pathname;
+    
+  fetch(url2)
+    .then(res => res.json())
+    .then(dato => {
+      for (let index = 0; index < dato.length; index++) {     
+           itemClientAcum += dato[index].items;
+      }
+      document.getElementById("clients-experiences").innerHTML += itemClientAcum;
+    })
+    .catch(error => {
+      console.error('Error fetching slider data:', error);
+    });
+}
+</script>
+<style>
+
+.clients-classic::before {
+    position: absolute;
+    content: '';
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    border: 1px solid transparent;
+    transition: all .3s ease;
+    will-change: transform;
+}
+
+.clients-classic img {
+    width: 100%;
+    height: auto;
+    opacity: .5;
+}
+
+@media (min-width: 992px) {
+
+    .clients-classic img {
+        will-change: transform;
+        transition: all .3s ease;
+    }
+
+    .clients-classic:hover {
+        border-color: #151515;
+    }
+
+    .clients-classic:hover::before {
+        transform: scale(0.94, 0.9);
+        border-color: #151515;
+    }
+
+    .clients-classic:hover img {
+        opacity: 1;
+        transform: scale(0.9);
+    }
+}
+
+.context-dark .clients-classic, .bg-gray-dark .clients-classic, .bg-primary .clients-classic {
+    background: transparent;
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.clients-classic {
+    position: relative;
+    display: block;
+}
+
+/* Estado normal: imagen en gris */
+.clients-classic img {
+    width: 100%;
+    height: auto;
+    filter: grayscale(100%);
+    opacity: 0.6;
+    transition: all .3s ease;
+}
+
+/* Hover: colores reales */
+@media (min-width: 992px) {
+    .clients-classic:hover img {
+        filter: grayscale(0%);
+        opacity: 1;
+        transform: scale(0.95);
+    }
+}
+</style>

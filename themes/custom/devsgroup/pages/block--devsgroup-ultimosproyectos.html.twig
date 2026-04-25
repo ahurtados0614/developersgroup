@@ -70,6 +70,14 @@
 <script src="https://cdn.jsdelivr.net/npm/mixitup@3/dist/mixitup.min.js"></script>
 
 <script>
+/* 🔥 FUNCIÓN PARA LIMPIAR CLASE CSS */
+const limpiarClase = (texto) => {
+  return texto
+    .toLowerCase()
+    .normalize("NFD")                // quita acentos
+    .replace(/[\u0300-\u036f]/g, "") // quita acentos
+    .replace(/\s+/g, '')             // quita espacios
+};
 function listar_gallery() {
   let url2 = "/project-gallery";
 
@@ -79,12 +87,13 @@ function listar_gallery() {
   let categorias = [];
 
   /* BOTÓN ALL */
-  filtrosDesktop += `
-    <li><a class="filter active mixitup-control-active" data-filter="all">ALL</a></li>
-  `;
-  filtrosMovil += `
-    <li><a class="dropdown-item filter active mixitup-control-active" data-filter="all">ALL</a></li>
-  `;
+    filtrosDesktop += `
+      <li><a class="filter" data-filter="all">ALL</a></li>
+    `;
+
+    filtrosMovil += `
+      <li><a class="dropdown-item filter" data-filter="all">ALL</a></li>
+    `;
 
   fetch(url2)
     .then(res => res.json())
@@ -92,13 +101,11 @@ function listar_gallery() {
 
       data.forEach((element) => {
 
-        /* 🔥 SPLIT REAL DE CATEGORÍAS */
-        let categoriasArray = element.category.split(' ');
+        /* 🔥 SPLIT POR PUNTO */
+        let categoriasArray = element.category.split('.');
 
         /* 🔥 GENERAR CLASES */
-        let clases = categoriasArray.map(cat =>
-          cat.toLowerCase().replace(/\./g, '')
-        ).join(' ');
+        let clases = categoriasArray.map(cat => limpiarClase(cat)).join(' ');
 
         /* GALERÍA */
         galleryHTML += `
@@ -107,7 +114,7 @@ function listar_gallery() {
               <div class="details">
                 <div class="text">
                   <h2>${element.title}</h2>
-                  <p>${element.category}</p>
+                  <p>${element.category.split('.').join(' | ')}</p>
                 </div>
               </div>
               <div class="overlay"></div>
@@ -119,7 +126,7 @@ function listar_gallery() {
         /* FILTROS */
         categoriasArray.forEach(cat => {
 
-          let catClean = cat.toLowerCase().replace(/\./g, '');
+          let catClean = limpiarClase(cat);
 
           if (!categorias.includes(catClean) && catClean !== 'all') {
 
@@ -166,6 +173,10 @@ function listar_gallery() {
 document.addEventListener("DOMContentLoaded", listar_gallery);
 </script>
 <style>
+a.filter.mixitup-control-active {
+    color: #756aee !important;
+}
+
 a.filter {
     cursor: pointer;
 }
@@ -250,11 +261,37 @@ a.filter {
 .gallery-item:hover .overlay {
   opacity: 1;
 }
-
+ul#itemss-filter {
+    max-width: 280px;
+    width: 100%;
+    padding: 20px !important;
+    background: #ffffff;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.17);
+    transform: translate3d(-50%, 0, 0);
+}
+a.dropdown-item.filter{
+color: #9b9b9b !important;
+font-size: 18px !important;
+    line-height: 1 !important;
+    font-weight: 500 !important;
+    letter-spacing: .1em !important;
+    text-transform: uppercase !important;
+    font-family: "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !important;
+    
+}
+a.dropdown-item.filter.active.mixitup-control-active{
+  color: #fff !important;
+}
 /* ===== RESPONSIVE ===== */
 @media (max-width: 900px) {
   .gallery-item {
     width: 100%;
+  }
+  .filter-movil.dropdown.isotope-filters.isotope-filters-horizontal {
+    display: block !important;
+  }
+  a.dropdown-item.filter.mixitup-control-active{
+    color: #756aee !important;
   }
 }
 </style>

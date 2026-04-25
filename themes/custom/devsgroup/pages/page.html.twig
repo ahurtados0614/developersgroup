@@ -131,7 +131,11 @@ set footer_classes = ' ' ~
   </div>
 
 </main>
-
+{% if page.maxwidthfoot %}
+<div class="row maxwidth" style="margin-top: 10px !important;">
+{{page.maxwidthfoot}}
+</div>
+{% endif %}
 {% if page.footer %}
 <footer role="contentinfo" class="mt-auto {{ footer_classes }}">
   <div class="{{ b5_top_container }}">
